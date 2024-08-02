@@ -171,3 +171,31 @@ ax.set_xlabel('Temperature')
 ax.set_ylabel('Ice cream sales')
 
 ax.legend()
+
+
+Q3) TV SALES BUDGET DATASET
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm12
+import matplotlib.pyplot as plt
+
+# Load the dataset
+df = pd.read_csv('advertising.csv')
+
+# Explore the data
+print(df.head())
+print(df.describe())
+
+plt.scatter(df['TV'], df['Sales'])
+plt.xlabel('TV Budget ($1000s)')
+plt.ylabel('Sales ($1000s)')
+plt.title('Relationship between Sales and TV Budget')
+plt.show()
+
+X = df[['TV']]
+y = df['Sales']
+
+X = sm12.add_constant(X)  # add intercept term
+model = sm.OLS(y, X).fit()
+
+print(model.summary())
