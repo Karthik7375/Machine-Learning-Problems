@@ -1,0 +1,173 @@
+
+Q1) HOurs_sunshine x Ice cream sold
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jun 28 13:54:46 2024
+
+@author: 22pc12@winserver.amcspsgtech.in
+"""
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from scipy.stats import linregress
+
+def calc_summation(lst,deg = 1):
+    summation = 0
+    for i in lst:
+        summation += i**deg
+    return summation
+
+hours_sunshine = np.array([2,3,5,7,9])
+icecream_sold = np.array([4,5,7,10,15])
+
+df = {
+     'x' : hours_sunshine,
+     'y' : icecream_sold
+}
+slope, intercept, r_value, p_value, std_err = linregress(df['x'],df['y'])
+print(f"Correlation coefficient : {r_value:.4f}")
+print(f"Linear Equation: Y = {slope:.4f}*X + {intercept:.4f}")
+print(f"Slope = {slope:.4f} and Intercept = {intercept:.4f}")
+fig, ax = plt.subplots()
+x = df['x']
+y = df['y']
+ax.scatter(x, y, label='Data points')
+x_pred = np.array([x.min(), x.max()])  
+y_pred = slope * x_pred + intercept  
+
+ax.plot(x_pred, y_pred, label='Regression line', color='red')
+ax.set_title('Linear Regression Example')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.legend()
+# Show the plot
+plt.show()
+
+Q2)Temperature Degree vs Ice cream sales
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul  5 13:58:58 2024
+
+@author: 22PC12
+"""
+
+import matplotlib.pyplot as plt
+import numpy as np12
+import pandas as pd
+import scipy
+
+def multiply_matrices(matrix1, matrix2):
+    result = [[0 for _ in range(len(matrix2[0]))] for _ in range(len(matrix1))]
+
+    for i in range(len(matrix1)):
+
+        for j in range(len(matrix2[0])):
+
+            for k in range(len(matrix2)):
+
+                result[i][j] += matrix1[i][k] * matrix2[k][j]
+           
+
+    return result
+
+def format_matrix(matrix):
+
+    for row in matrix:
+
+        for i, elem in enumerate(row):
+
+            row[i] = f"{elem:.3f}"  # format to 3 decimal places
+
+
+def Transpose(matrix):
+    return [[row[i] for row in matrix] for i in range(len(matrix[0]))]
+
+def calc_summation(lst,deg = 1):
+    summation = 0
+    for i in lst:
+        summation += i**deg
+    return summation
+
+
+temperature_degree = np12.array([14.2,16.4,11.9,15.2,18.5,22.1,19.4,25.1,23.4,18.1,22.6,17.2])
+ice_cream_sales = np12.array([215,325,185,332,406,522,412,614,544,421,445,408])
+
+Y = ice_cream_sales
+
+
+X_Matrix = []
+for i in range(0,len(temperature_degree)):
+    lst = [1]
+    lst.append( temperature_degree[i] )
+    X_Matrix.append(lst)
+
+X_Matrix = np12.array(X_Matrix)
+X_Transpose = Transpose(X_Matrix)
+
+X_Transpose = np12.array(X_Transpose)
+
+Product1 = multiply_matrices(X_Transpose, X_Matrix)
+
+Product1_copy = [row.copy() for row in Product1]  # create a copy of Product1
+format_matrix(Product1_copy)
+
+
+print("\n\nProduct1 X^T * X: ",Product1_copy, "\n\n")
+
+Inverse = np12.linalg.inv(Product1)  # compute inverse on the original Product1
+
+print("Inverse = \n\n", Inverse)
+
+format_matrix(X_Transpose)
+
+
+Product = multiply_matrices(X_Transpose.tolist(), Y.reshape(-1, 1).tolist())
+
+print("\n\nX^T * Y = ",Product)
+
+B_VALUES = multiply_matrices(Inverse,Product)
+
+format_matrix(B_VALUES)
+print("\n\n\nB MATRIX = ",B_VALUES)
+
+
+x_sample = 21
+
+Y_sample = eval(B_VALUES[0][0]) + x_sample*eval(B_VALUES[1][0])
+
+print(f"Y AT X = {x_sample} = {Y_sample}")
+
+
+df = {
+     'x' : temperature_degree,
+     'y' : ice_cream_sales
+}
+
+fig, ax = plt.subplots()
+
+x = df['x']
+y = df['y']
+
+
+ax.scatter(x, y, label='Data points')
+
+
+x_pred = np12.array([x.min(), x.max()])  
+#y_pred = slope * x_pred + intercept
+y_pred = eval(B_VALUES[0][0]) + x_pred*eval(B_VALUES[1][0])
+
+ax.plot(x_pred, y_pred, label='Regression line', color='red')
+
+
+
+ax.set_title('Linear Regression')
+
+ax.set_xlabel('Temperature')
+
+ax.set_ylabel('Ice cream sales')
+
+ax.legend()
