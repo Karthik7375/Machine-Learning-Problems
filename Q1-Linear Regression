@@ -1,1 +1,78 @@
-Hello world
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+print("1: Read and load the dataset into a DataFrame")
+url = 'IPL.csv'
+df = pd.read_csv(url)
+
+print("\n\n2: Displaying First Few Records of the DataFrame")
+print(df.head())
+
+print("\n\n3: Finding Summary of the DataFrame")
+print(df.info())
+print(df.describe())
+
+print("\n\n4: Slicing and Indexing of DataFrame")
+print(df.iloc[0:5, 0:3])  # slice the first 5 rows and first 3 columnns
+print(df.loc[0:5, 'PLAYER NAME':'AGE'])  # slice the first 6 rows and columns from 'PLAYER NAME' to 'AGE'
+
+print("\n\nFind the occurrences of each unique value in a column")
+print(df['AGE'].value_counts())
+
+print("\n\nPerform cross tabulation between PLAYING ROLE and AGE")
+print(pd.crosstab(df['PLAYING ROLE'], df['AGE']))
+
+print("\n\nSorting Data Frame by Column Values")
+print(df.sort_values(by='SOLD PRICE', ascending=False).head())
+
+print("\n\nFind average SOLD PRICE for each age category")
+soldprice_by_age = df.groupby('AGE')['SOLD PRICE'].mean().reset_index()
+print(soldprice_by_age)
+
+print("\n\nPerform joining of data frames")
+soldprice_by_age_role = df.groupby(['AGE', 'PLAYING ROLE'])['SOLD PRICE'].mean().reset_index()
+print(soldprice_by_age_role)
+
+merged_df = pd.merge(soldprice_by_age, soldprice_by_age_role, on='AGE', how='outer')
+print(merged_df)
+
+print("\n\nCalculate the premium (change) for each age and playing role category")
+merged_df['CHANGE'] = (merged_df['SOLD PRICE_y'] / merged_df['SOLD PRICE_x']) - 1
+print(merged_df)
+
+# Step 11: Exploration of data using visualization
+
+# Bar Chart: Count of players by AGE
+df['AGE'].value_counts().plot(kind='bar')
+plt.title('Count of players by AGE')
+plt.xlabel('AGE')
+plt.ylabel('Count')
+plt.show()
+
+# Scatter Plot: SOLD PRICE vs AGE
+df.plot.scatter(x='AGE', y='SOLD PRICE')
+plt.title('SOLD PRICE vs AGE')
+plt.xlabel('AGE')
+plt.ylabel('SOLD PRICE')
+plt.show()
+
+# Histogram: Distribution of SOLD PRICE
+df['SOLD PRICE'].plot.hist(bins=50)
+plt.title('Distribution of SOLD PRICE')
+plt.xlabel('SOLD PRICE')
+plt.ylabel('Frequency')
+plt.show()
+
+# Correlation Matrix
+corr_matrix = df.corr()
+print(corr_matrix)
+
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+plt.title('Correlation Matrix')
+plt.show()
+
+# Heatmap: Correlation between columns
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+plt.title('Heatmap: Correlation between columns')
+plt.show()
